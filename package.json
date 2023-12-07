@@ -8,8 +8,5 @@
         "start": "bun run ./day-1/index.js"
     },
     "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "fs": "^0.0.1-security"
-    }
+    "license": "ISC"
 }
