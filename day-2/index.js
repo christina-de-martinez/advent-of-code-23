@@ -10,43 +10,52 @@ const text = await file.text().then((res) => {
 // Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 // Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green`;
 
+/*
+expect
+4 red, 2 green, 6 blue = 4 * 2 * 6 = 48
+1 red, 3 green, 4 blue = 12
+20 red, 13 green, 6 blue = 1560
+14 red, 3, green, 15 blue = 630
+6 red, 3 green, 2 blue = 36
+total = 2286
+*/
+
 // sumPossibleGames(input);
 
 function sumPossibleGames(input) {
     const lines = input.split("\n");
 
-    const maximumNumberOfCubes = {
-        red: 12,
-        green: 13,
-        blue: 14,
-    };
-
-    const answer = lines.reduce((prev, curr) => {
-        const lineArray = curr.split(":");
+    const answer = lines.reduce((prevValue, currValue) => {
+        const lineArray = currValue.split(":");
         const gamesListString = lineArray[1].trim();
         const gameId = parseInt(lineArray[0].split(" ")[1]);
         const gamesArray = gamesListString.split(";");
 
-        const possibleGames = gamesArray.filter((element) =>
-            element
+        const minimumNumberOfCubes = {
+            red: 0,
+            green: 0,
+            blue: 0,
+        };
+        const possibleGames = gamesArray.reduce((previous, current) => {
+            current
                 .trim()
                 .split(",")
-                .every((el) => {
+                .map((el) => {
                     const blocksString = el.trim().split(" ");
                     const numberOfBlocks = parseInt(blocksString[0]);
-                    return (
-                        numberOfBlocks <= maximumNumberOfCubes[blocksString[1]]
-                    );
-                })
+                    if (
+                        numberOfBlocks > minimumNumberOfCubes[blocksString[1]]
+                    ) {
+                        minimumNumberOfCubes[blocksString[1]] = numberOfBlocks;
+                    }
+                });
+            return minimumNumberOfCubes;
+        }, []);
+        return (
+            prevValue +
+            possibleGames.red * possibleGames.green * possibleGames.blue
         );
-
-        if (possibleGames.length === gamesArray.length) {
-            return prev + gameId;
-        }
-        return prev;
     }, 0);
-
     console.log("answer", answer);
-
     return answer;
 }
